@@ -3,6 +3,8 @@
 
 #define tamanhoTextoPostagens 201
 
+#include "Hashtag.h"
+
 class Postagem
 {
     public:
@@ -21,11 +23,13 @@ class Postagem
         Postagem();
         bool existe();
 
+        Hashtag hashtag;
+
     private:
         int IDusuario;
         int numeroPostagem;
         char conteudo[tamanhoTextoPostagens];
-        int curtidas;
+        int curtidas = 0;
         bool apagada=false;
 };
 

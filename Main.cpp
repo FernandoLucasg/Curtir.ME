@@ -7,6 +7,7 @@
 #include "Usuario.h"
 #include "Postagem.h"
 #include "Comentario.h"
+#include "Hashtag.h"
 
 #include "manipuladorDeUsuario.h"
 #include "manipuladorDePostagem.h"
@@ -16,6 +17,7 @@
 manipuladorDeUsuario manipuladorUsuarios;
 manipuladorDePostagem manipuladorPostagens;
 manipuladorDeComentario manipuladorComentarios;
+Hashtag manipuladorHashtag;
 
 /*Declaração das Funções*/
 
@@ -24,6 +26,7 @@ void printaMenu();
 void limpaEntrada();
 void printaMenuPostagens();
 void printaMenuFeed();
+void printaMenuFeedPostagens();
 
 /*Declaração das Funções*/
 
@@ -34,6 +37,7 @@ int main() {
     manipuladorUsuarios.criaArquivosNescessarios();
     manipuladorPostagens.criaArquivosNescessarios();
     manipuladorComentarios.criaArquivosNescessarios();
+    manipuladorHashtag.criaArquivosNescessarios();
 
     cout << "Numero de usuarios: " << manipuladorUsuarios.numeroDeUsuarios() << endl;
     cout << "Numero de postagens: " << manipuladorPostagens.numeroDePostagens() << endl;
@@ -206,10 +210,7 @@ int main() {
                     goto postagemStop;
                     break;
                 case 1: // Exibe o feed
-                    int opcaoFeed;
-                    manipuladorPostagens.mostrarFeed();
                     printaMenuFeed();
-
                     break;
                 case 0:
                     usuarioAtual.limpaUsuario();
@@ -229,8 +230,30 @@ int main() {
                                 char texto[tamanhoTextoPostagens];
                                 cout << "Digite o conteudo da postagem:\n";
                                 fgets(texto, tamanhoTextoPostagens, stdin);
+
                                 Postagem novaPostagem(usuarioAtual.getId(), 0,texto);
-                                manipuladorPostagens.adicionaAoArquivo(novaPostagem);
+
+                                cout << "Dejesa adicionar uma Hashtag (1) Sim (Outro numero) Não: \n";
+                                cin >> opcaoPostagens;
+                                limpaEntrada();
+
+                                if(opcaoPostagens == 1){ //Adiciona hashtag
+                                    char hashtag[tamanhoTextoPostagens];
+                                    while(1){
+                                        cout << "Digite a Hashtag:\n";
+                                        fgets(hashtag, tamanhoHashtag, stdin);
+                                        if(novaPostagem.hashtag.verificaFormato(hashtag)){
+                                            break;
+                                        }
+                                        cout << "Digite uma Hashtag que comece com #\n";
+                                    }
+
+                                    novaPostagem.hashtag.Sethashtag(hashtag);
+                                    novaPostagem.hashtag.Setexiste(true);
+                                    manipuladorHashtag.adicionaHashtagArquivo(novaPostagem.hashtag);
+                                }
+
+                                manipuladorPostagens.adicionaAoArquivo(novaPostagem); //Adiciona a nova postagem ao arquivo
                                 system("pause");
                         }else if(opcaoPostagens == 2){ // Alterar uma postagem
                                 while(1){
@@ -325,7 +348,7 @@ void printaMenuPostagens(){
         cout <<"    Digite a opção: ";
 }
 
-void printaMenuFeed(){
+void printaMenuFeedPostagens(){
         int opcao;
         int idPostagem;
         char textoComentario[tamanhoTextoComentarios];
@@ -373,6 +396,53 @@ void printaMenuFeed(){
                         scanf("%d", &IDpostagem);
                         limpaEntrada();
                         manipuladorPostagens.detalhar(IDpostagem);
+                    break;
+                case 0:
+                    return;
+
+            }
+        }
+}
+
+void printaMenuFeed(){
+        int opcao;
+        int idPostagem;
+        char textoComentario[tamanhoTextoComentarios];
+        int IDpostagem;
+        Comentario comentario;
+
+
+        while(1){
+            system("cls");
+            cout <<"    .....................................................................\n";
+            cout <<"    .                                                                   .\n";
+            cout <<"    .                            Feed                                   .\n";
+            cout <<"    .                                                                   .\n";
+            cout <<"    .....................................................................\n";
+
+
+
+            printf("\n\n    ID: %d Perfil: %s\n",usuarioAtual.getId(),usuarioAtual.getNome());
+
+            cout <<"    1 - Meu Feed\n";
+            cout <<"    2 - Feed Global\n";
+            cout <<"    3 - Postagens por Hashtag\n";
+            cout <<"    0 - Voltar\n";
+            cout <<"    Digite a opção: ";
+            cin >> opcao;
+
+            switch(opcao){
+                case 1: //Mostra feed pelas pessoas que você segue
+
+                    break;
+                case 2: // Mostra o Feed total
+                    manipuladorPostagens.mostrarFeed();
+                    printaMenuFeedPostagens();
+                    break;
+                case 3: // Mostra feed por hashtag
+                    char hashtag[tamanhoHashtag];
+
+
                     break;
                 case 0:
                     return;

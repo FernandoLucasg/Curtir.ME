@@ -23,14 +23,14 @@ class manipuladorDePostagem
     private:
 };
 
-//FunÃ§Ã£o que cria todos os documentos nescessarios para o funcionamento das postagens
+//Função que cria todos os documentos nescessarios para o funcionamento das postagens
 void manipuladorDePostagem::criaArquivosNescessarios(){
-    //Arquivo de numero de postagens cadastrados
+    //Arquivo de numero de usuarios cadastrados
     ifstream ifs("Arquivos/numeroDePostagensCadastradas.bin");
     if (!ifs) { //Verifica se Existe o Arquivo
         ofstream arquivo("Arquivos/numeroDePostagensCadastradas.bin", ios::binary | ios::app);
         if (!arquivo.is_open()) {
-            geraExcecao("Erro ao criar o arquivo de numero de postagens.");
+            geraExcecao("Erro ao criar o arquivo de numero de usuarios.");
             return;
         }
         int numeroInicial = 0;
@@ -69,7 +69,10 @@ void manipuladorDePostagem::mostrarFeed(){
 
             cout << "\n       Id da postagem: " << post.GetnumeroPostagem();
             cout << "  ||  Postado por: "<< mUsuario.procuraUsuarioId(post.GetIDusuario()).getNome() << endl;
-            cout << "       " << post.Getconteudo()<< endl;
+
+            post.hashtag.Getexiste() ? cout << "       " << post.hashtag.Gethashtag() << endl : cout << "";
+
+            cout << "       Conteúdo: " << post.Getconteudo()<< endl;
             cout << "       " << post.Getcurtidas() << "    ";
 
             if(post.Getcurtidas() == 1){
@@ -80,7 +83,7 @@ void manipuladorDePostagem::mostrarFeed(){
             }
             cout << "\n         ...............................................................................................................\n";
 
-            cout << "\n\n           ComentÃ¡rios: " << endl;
+            cout << "\n\n           Comentários: " << endl;
             mComentario.exibirComentariosPorId(post.GetnumeroPostagem(), 2);
 
             cout << "\n         :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n\n";
@@ -116,7 +119,7 @@ void manipuladorDePostagem::detalhar(int id){
                     cout <<"Curtidas"<< endl;
 
                 }
-                cout << "\n\n           ComentÃ¡rios: " << endl;
+                cout << "\n\n           Comentários: " << endl;
                 mComentario.exibirComentariosPorId(post.GetnumeroPostagem(), mostrarTodos);
 
                 cout << "\n         ...............................................................................................................\n\n";
@@ -225,7 +228,7 @@ Postagem manipuladorDePostagem::buscaPostagem(int id){
     Postagem vazio;
 
     if (!arquivo.is_open()) {
-        geraExcecao("Erro ao abrir o arquivo de usuÃ¡rios.");
+        geraExcecao("Erro ao abrir o arquivo de usuários.");
         return vazio;
     }else{
 
